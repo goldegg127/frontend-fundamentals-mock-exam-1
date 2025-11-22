@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Spacing, Tab } from 'tosslib';
 
 import { useSavingsCalculator } from './hooks/useSavingsCalculator';
@@ -10,6 +11,7 @@ import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
   const { inputs, products, handleInputChange, selectedProductId, handleProductSelect } = useSavingsCalculator();
+  const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
 
   return (
     <>
@@ -25,28 +27,30 @@ export default function SavingsCalculatorPage() {
       <Divider borderHeight={16} spacingHeight={8} />
 
       {/* 사용자 선택 탭 */}
-      <Tab onChange={() => {}}>
-        <Tab.Item value="products" selected={true}>
+      <Tab onChange={value => setActiveTab(value as 'products' | 'results')}>
+        <Tab.Item value="products" selected={activeTab === 'products'}>
           적금 상품
         </Tab.Item>
-        <Tab.Item value="results" selected={false}>
+        <Tab.Item value="results" selected={activeTab === 'results'}>
           계산 결과
         </Tab.Item>
       </Tab>
 
-      {/* 입력 기준 필터링 상품 */}
-      <ProductList products={products} selectedProductId={selectedProductId} onSelect={handleProductSelect} />
+      {activeTab === 'products' && (
+        <ProductList products={products} selectedProductId={selectedProductId} onSelect={handleProductSelect} />
+      )}
 
-      {/* 아래는 계산 결과 탭 내용이에요. 계산 결과 탭을 구현할 때 주석을 해제해주세요. */}
-      <Spacing size={8} />
+      {activeTab === 'results' && (
+        <>
+          {/* 계산 결과 */}
+          <CalculationResult />
 
-      {/* 계산 결과 */}
-      <CalculationResult />
+          <Divider borderHeight={16} spacingHeight={8} />
 
-      <Divider borderHeight={16} spacingHeight={8} />
-
-      {/* 추천 상품 */}
-      <RecommendedProducts />
+          {/* 추천 상품 */}
+          <RecommendedProducts />
+        </>
+      )}
 
       <Spacing size={40} />
     </>
