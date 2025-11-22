@@ -5,9 +5,11 @@ import type { SavingsProduct } from '../types';
 
 type ProductListProps = {
   products: SavingsProduct[];
+  selectedProductId: string | null;
+  onSelect: (id: string) => void;
 };
 
-const ProductList = React.memo(({ products }: ProductListProps) => {
+const ProductList = React.memo(({ products, selectedProductId, onSelect }: ProductListProps) => {
   if (!products || products.length === 0) {
     return <ListRow contents={'조건에 맞는 상품이 없습니다.'} />;
   }
@@ -28,8 +30,8 @@ const ProductList = React.memo(({ products }: ProductListProps) => {
               bottomProps={{ fontSize: 13, color: colors.grey600 }}
             />
           }
-          right={<Assets.Icon name="icon-check-circle-green" />}
-          onClick={() => {}}
+          right={product.id === selectedProductId ? <Assets.Icon name="icon-check-circle-green" /> : undefined}
+          onClick={() => onSelect(product.id)}
         />
       ))}
     </>

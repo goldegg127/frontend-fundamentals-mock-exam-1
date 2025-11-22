@@ -9,7 +9,7 @@ import { default as RecommendedProducts } from './components/RecommendedProducts
 import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
-  const { inputs, products, handleInputChange } = useSavingsCalculator();
+  const { inputs, products, handleInputChange, selectedProductId, handleProductSelect } = useSavingsCalculator();
 
   return (
     <>
@@ -35,7 +35,7 @@ export default function SavingsCalculatorPage() {
       </Tab>
 
       {/* 입력 기준 필터링 상품 */}
-      <ProductList products={products} />
+      <ProductList products={products} selectedProductId={selectedProductId} onSelect={handleProductSelect} />
 
       {/* 아래는 계산 결과 탭 내용이에요. 계산 결과 탭을 구현할 때 주석을 해제해주세요. */}
       <Spacing size={8} />
