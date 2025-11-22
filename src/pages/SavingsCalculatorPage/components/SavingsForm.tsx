@@ -1,17 +1,46 @@
+import React from 'react';
 import { SelectBottomSheet, Spacing, TextField } from 'tosslib';
+import { formatAmount, parseNumber } from '../../../utils/format';
+import type { CalculatorInput } from '../types';
 
-export default function SavingForm() {
+interface SavingFormProps {
+  value: CalculatorInput;
+  onChange: (name: keyof CalculatorInput, value: number) => void;
+}
+
+type InputEvent = React.ChangeEvent<HTMLInputElement>;
+
+export default function SavingForm({ value, onChange }: SavingFormProps) {
   return (
-    <>
-      <TextField label="목표 금액" placeholder="목표 금액을 입력하세요" suffix="원" />
+    <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+      <TextField
+        label="목표 금액"
+        placeholder="목표 금액을 입력하세요"
+        value={formatAmount(value.goalAmount)}
+        suffix="원"
+        onChange={(e: InputEvent) => onChange('goalAmount', parseNumber(e.target.value))}
+      />
       <Spacing size={16} />
-      <TextField label="월 납입액" placeholder="희망 월 납입액을 입력하세요" suffix="원" />
+      <TextField
+        label="월 납입액"
+        placeholder="희망 월 납입액을 입력하세요"
+        value={formatAmount(value.monthlyAmount)}
+        suffix="원"
+        onChange={(e: InputEvent) => onChange('monthlyAmount', parseNumber(e.target.value))}
+      />
+
       <Spacing size={16} />
-      <SelectBottomSheet label="저축 기간" title="저축 기간을 선택해주세요" value={12} onChange={() => {}}>
+
+      <SelectBottomSheet
+        label="저축 기간"
+        title="저축 기간을 선택해주세요"
+        value={value.term}
+        onChange={(value: number) => onChange('term', value)}
+      >
         <SelectBottomSheet.Option value={6}>6개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={12}>12개월</SelectBottomSheet.Option>
         <SelectBottomSheet.Option value={24}>24개월</SelectBottomSheet.Option>
       </SelectBottomSheet>
-    </>
+    </form>
   );
 }

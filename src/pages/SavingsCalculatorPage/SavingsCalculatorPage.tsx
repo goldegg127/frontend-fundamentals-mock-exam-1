@@ -1,23 +1,31 @@
 import { Border, NavigationBar, Spacing, Tab } from 'tosslib';
 
+import { useSavingsCalculator } from './hooks/useSavingsCalculator';
+
 import { default as SavingForm } from './components/SavingsForm';
 import { default as CalculationResult } from './components/CalculationResult';
 import { default as RecommendedProducts } from './components/RecommendedProducts';
 import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
+  const { inputs, handleInputChange } = useSavingsCalculator();
+
   return (
     <>
       <NavigationBar title="적금 계산기" />
 
-      <Spacing size={16} />
-
       {/* 계산 입력 */}
-      <SavingForm />
+      <section>
+        <Spacing size={16} />
+        <SavingForm value={inputs} onChange={handleInputChange} />
+        <Spacing size={16} />
+      </section>
 
-      <Spacing size={24} />
-      <Border height={16} />
-      <Spacing size={8} />
+      <div>
+        <Spacing size={8} />
+        <Border height={16} />
+        <Spacing size={8} />
+      </div>
 
       {/* 사용자 선택 탭 */}
       <Tab onChange={() => {}}>
