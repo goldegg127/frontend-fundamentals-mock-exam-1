@@ -1,6 +1,7 @@
+import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 
-export default function ProductList() {
+const ProductList = React.memo(() => {
   return (
     <>
       <ListRow
@@ -34,4 +35,6 @@ export default function ProductList() {
       />
     </>
   );
-}
+});
+
+export default ProductList;

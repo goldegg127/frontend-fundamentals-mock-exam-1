@@ -1,6 +1,7 @@
+import React from 'react';
 import { colors, ListHeader, ListRow, Spacing } from 'tosslib';
 
-export default function RecommendedProducts() {
+const RecommendedProducts = React.memo(() => {
   return (
     <>
       <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
@@ -36,4 +37,6 @@ export default function RecommendedProducts() {
       />
     </>
   );
-}
+});
+
+export default RecommendedProducts;

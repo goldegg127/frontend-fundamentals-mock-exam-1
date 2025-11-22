@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { CalculatorInput } from '../types';
 
 const useSavingsCalculator = () => {
@@ -8,9 +8,9 @@ const useSavingsCalculator = () => {
     term: 12,
   });
 
-  const handleInputChange = (name: keyof CalculatorInput, value: number) => {
+  const handleInputChange = useCallback((name: keyof CalculatorInput, value: number) => {
     setInputs(prev => ({ ...prev, [name]: value }));
-  };
+  }, []);
 
   return {
     inputs,

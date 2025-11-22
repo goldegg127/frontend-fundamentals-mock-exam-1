@@ -1,6 +1,7 @@
+import React from 'react';
 import { colors, ListRow } from 'tosslib';
 
-export default function CalculationResult() {
+const CalculationResult = React.memo(() => {
   return (
     <>
       {/* 아래는 계산 결과 탭 내용이에요. 계산 결과 탭을 구현할 때 주석을 해제해주세요. */}
@@ -43,4 +44,6 @@ export default function CalculationResult() {
       {/* <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} /> */}
     </>
   );
-}
+});
+
+export default CalculationResult;

@@ -10,7 +10,7 @@ interface SavingFormProps {
 
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
-export default function SavingForm({ value, onChange }: SavingFormProps) {
+const SavingForm = React.memo(({ value, onChange }: SavingFormProps) => {
   return (
     <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
       <TextField
@@ -43,4 +43,6 @@ export default function SavingForm({ value, onChange }: SavingFormProps) {
       </SelectBottomSheet>
     </form>
   );
-}
+});
+
+export default SavingForm;
