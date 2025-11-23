@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors, ListRow } from 'tosslib';
 
-import { formatAmount } from '../../../utils';
+import { formatAmount } from 'utils';
 import type { CalculationResult } from '../types';
 
 interface CalculationResultProps {

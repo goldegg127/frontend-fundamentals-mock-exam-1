@@ -3,7 +3,7 @@ import { Spacing, Tab } from 'tosslib';
 
 import { useSavingsCalculator } from './hooks/useSavingsCalculator';
 
-import { PageHeader, Divider } from '../../components/common';
+import { PageHeader, Divider } from 'components/common';
 import { default as SavingForm } from './components/SavingsForm';
 import { default as CalculationResult } from './components/CalculationResult';
 import { default as RecommendedProducts } from './components/RecommendedProducts';
