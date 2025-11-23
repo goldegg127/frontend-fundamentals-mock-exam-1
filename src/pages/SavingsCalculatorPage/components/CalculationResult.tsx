@@ -4,18 +4,15 @@ import { colors, ListRow } from 'tosslib';
 import { formatAmount } from 'utils';
 import type { CalculationResult as CalculationResultData } from '../types';
 
+import { VALIDATION_MESSAGE as validationMessage } from '../constants';
+
 interface CalculationResultProps {
   result: CalculationResultData | null;
 }
 
-const VALIDATION_MESSAGE = {
-  selectedProduct: '상품을 선택해주세요.',
-  expectedTotal: '월 납입액을 입력해주세요.',
-  difference: '목표 금액과 월 납입액을 입력해주세요.',
-  recommendedMonthly: '목표 금액을 입력해주세요.',
-};
-
 const CalculationResult = React.memo(({ result }: CalculationResultProps) => {
+  const VALIDATION_MESSAGE = validationMessage.CALCULATION_RESULT;
+
   if (!result) {
     return <ListRow contents={<ListRow.Texts type="1RowTypeA" top={VALIDATION_MESSAGE.selectedProduct} />} />;
   }

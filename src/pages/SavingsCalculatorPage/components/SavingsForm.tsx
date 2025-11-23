@@ -2,6 +2,7 @@ import React from 'react';
 import { SelectBottomSheet, Spacing, TextField } from 'tosslib';
 import { formatAmount, parseNumber } from 'utils';
 import type { CalculatorInput } from '../types';
+import { SAVINGS_TERM_OPTIONS } from '../constants';
 
 interface SavingsFormProps {
   value: CalculatorInput;
@@ -20,7 +21,9 @@ const SavingsForm = React.memo(({ value, onChange }: SavingsFormProps) => {
         suffix="원"
         onChange={(e: InputEvent) => onChange('goalAmount', parseNumber(e.target.value))}
       />
+
       <Spacing size={16} />
+
       <TextField
         label="월 납입액"
         placeholder="희망 월 납입액을 입력하세요"
@@ -37,9 +40,11 @@ const SavingsForm = React.memo(({ value, onChange }: SavingsFormProps) => {
         value={value.term}
         onChange={(value: number) => onChange('term', value)}
       >
-        <SelectBottomSheet.Option value={6}>6개월</SelectBottomSheet.Option>
-        <SelectBottomSheet.Option value={12}>12개월</SelectBottomSheet.Option>
-        <SelectBottomSheet.Option value={24}>24개월</SelectBottomSheet.Option>
+        {SAVINGS_TERM_OPTIONS.map(opt => (
+          <SelectBottomSheet.Option key={opt} value={opt}>
+            {`${opt}개월`}
+          </SelectBottomSheet.Option>
+        ))}
       </SelectBottomSheet>
     </form>
   );
