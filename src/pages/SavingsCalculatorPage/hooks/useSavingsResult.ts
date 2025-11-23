@@ -24,7 +24,7 @@ const useSavingsResult = (inputs: CalculatorInput, selectedProduct: SavingsProdu
       expectedTotal,
       difference,
       recommendedMonthly,
-      calcaulatedValidation: {
+      calculatedValidation: {
         expectedTotal: monthlyAmount !== 0,
         difference: monthlyAmount !== 0 && goalAmount !== 0,
         recommendedMonthly: goalAmount !== 0,

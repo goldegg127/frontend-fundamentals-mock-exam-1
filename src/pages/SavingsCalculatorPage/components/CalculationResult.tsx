@@ -20,7 +20,7 @@ const CalculationResult = React.memo(({ result }: CalculationResultProps) => {
     return <ListRow contents={<ListRow.Texts type="1RowTypeA" top={VALIDATION_MESSAGE.selectedProduct} />} />;
   }
 
-  const { expectedTotal, difference, recommendedMonthly, calcaulatedValidation } = result;
+  const { expectedTotal, difference, recommendedMonthly, calculatedValidation } = result;
 
   const datas = [
     {
@@ -53,7 +53,7 @@ const CalculationResult = React.memo(({ result }: CalculationResultProps) => {
               type="2RowTypeA"
               top={label}
               topProps={{ color: colors.grey600 }}
-              {...(calcaulatedValidation[name]
+              {...(calculatedValidation[name]
                 ? { bottom: value, bottomProps: { fontWeight: 'bold', color: colors.blue600 } }
                 : { bottom: validationMessage, bottomProps: { fontWeight: 'bold', color: colors.red400 } })}
             />
