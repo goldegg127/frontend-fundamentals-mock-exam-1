@@ -1,16 +1,14 @@
-import { useState } from 'react';
-import { Spacing, Tab } from 'tosslib';
+import { Spacing } from 'tosslib';
 
 import { useSavingsCalculator } from './hooks/useSavingsCalculator';
 
-import { PageHeader, Divider } from 'components/common';
+import { PageHeader, Divider, Tabs } from 'components/common';
 import { default as SavingForm } from './components/SavingsForm';
 import { default as CalculationResult } from './components/CalculationResult';
 import { default as RecommendedProducts } from './components/RecommendedProducts';
 import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
-  const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
   const {
     inputs,
     products,
@@ -34,35 +32,28 @@ export default function SavingsCalculatorPage() {
 
       <Divider borderHeight={16} spacingHeight={8} />
 
-      {/* 사용자 선택 탭 */}
-      <Tab onChange={value => setActiveTab(value as 'products' | 'results')}>
-        <Tab.Item value="products" selected={activeTab === 'products'}>
-          적금 상품
-        </Tab.Item>
-        <Tab.Item value="results" selected={activeTab === 'results'}>
-          계산 결과
-        </Tab.Item>
-      </Tab>
+      <section>
+        <Tabs defaultValue="products">
+          <Tabs.Panel label="적금 상품" value="products">
+            {/* 상품 목록 */}
+            <ProductList products={products} selectedProductId={selectedProductId} onSelect={handleProductSelect} />
+          </Tabs.Panel>
 
-      {activeTab === 'products' && (
-        <ProductList products={products} selectedProductId={selectedProductId} onSelect={handleProductSelect} />
-      )}
+          <Tabs.Panel label="계산 결과" value="results">
+            {/* 계산 결과 */}
+            <CalculationResult result={savingResult} />
 
-      {activeTab === 'results' && (
-        <>
-          {/* 계산 결과 */}
-          <CalculationResult result={savingResult} />
+            <Divider borderHeight={16} spacingHeight={8} />
 
-          <Divider borderHeight={16} spacingHeight={8} />
-
-          {/* 추천 상품 */}
-          <RecommendedProducts
-            products={recommendedProducts}
-            selectedProductId={selectedProductId}
-            onSelect={handleProductSelect}
-          />
-        </>
-      )}
+            {/* 추천 상품 */}
+            <RecommendedProducts
+              products={recommendedProducts}
+              selectedProductId={selectedProductId}
+              onSelect={handleProductSelect}
+            />
+          </Tabs.Panel>
+        </Tabs>
+      </section>
 
       <Spacing size={40} />
     </>
