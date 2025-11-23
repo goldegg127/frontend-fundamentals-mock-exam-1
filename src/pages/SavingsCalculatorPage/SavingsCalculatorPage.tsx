@@ -11,8 +11,15 @@ import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
   const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
-  const { inputs, products, handleInputChange, selectedProductId, handleProductSelect, savingResult } =
-    useSavingsCalculator();
+  const {
+    inputs,
+    products,
+    handleInputChange,
+    selectedProductId,
+    handleProductSelect,
+    savingResult,
+    recommendedProducts,
+  } = useSavingsCalculator();
 
   return (
     <>
@@ -49,7 +56,11 @@ export default function SavingsCalculatorPage() {
           <Divider borderHeight={16} spacingHeight={8} />
 
           {/* 추천 상품 */}
-          <RecommendedProducts />
+          <RecommendedProducts
+            products={recommendedProducts}
+            selectedProductId={selectedProductId}
+            onSelect={handleProductSelect}
+          />
         </>
       )}
 
