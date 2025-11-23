@@ -9,13 +9,13 @@ import {
 } from './hooks';
 
 import { PageHeader, Divider, Tabs } from 'components/common';
-import { SavingForm, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
+import { SavingsForm, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
 
 export default function SavingsCalculatorPage() {
   const { inputs, handleInputChange } = useSavingsFormState();
   const { products } = useSavingsProductData(inputs);
   const { selectedProductId, selectedProduct, handleProductSelect } = useProductSelection(products);
-  const { savingResult } = useSavingsResult(inputs, selectedProduct);
+  const { savingsResult } = useSavingsResult(inputs, selectedProduct);
   const { recommendedProducts } = useRecommendedProducts(products);
 
   return (
@@ -25,7 +25,7 @@ export default function SavingsCalculatorPage() {
       {/* 계산 입력 */}
       <section>
         <Spacing size={16} />
-        <SavingForm value={inputs} onChange={handleInputChange} />
+        <SavingsForm value={inputs} onChange={handleInputChange} />
         <Spacing size={16} />
       </section>
 
@@ -43,7 +43,7 @@ export default function SavingsCalculatorPage() {
           </Tabs.Panel>
 
           <Tabs.Panel label="계산 결과" value="results">
-            <CalculationResult result={savingResult} />
+            <CalculationResult result={savingsResult} />
 
             <Divider borderHeight={16} spacingHeight={8} />
 

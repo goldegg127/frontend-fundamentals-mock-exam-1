@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { CalculatorInput, SavingsProduct, CalculationResult } from '../types';
 
 const useSavingsResult = (inputs: CalculatorInput, selectedProduct: SavingsProduct | null) => {
-  const savingResult = useMemo<CalculationResult | null>(() => {
+  const savingsResult = useMemo<CalculationResult | null>(() => {
     if (!selectedProduct) {
       return null;
     }
@@ -32,7 +32,7 @@ const useSavingsResult = (inputs: CalculatorInput, selectedProduct: SavingsProdu
     };
   }, [inputs, selectedProduct]);
 
-  return { savingResult };
+  return { savingsResult };
 };
 
 export { useSavingsResult };

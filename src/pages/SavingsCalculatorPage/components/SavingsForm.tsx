@@ -3,14 +3,14 @@ import { SelectBottomSheet, Spacing, TextField } from 'tosslib';
 import { formatAmount, parseNumber } from 'utils';
 import type { CalculatorInput } from '../types';
 
-interface SavingFormProps {
+interface SavingsFormProps {
   value: CalculatorInput;
   onChange: (name: keyof CalculatorInput, value: number) => void;
 }
 
 type InputEvent = React.ChangeEvent<HTMLInputElement>;
 
-const SavingForm = React.memo(({ value, onChange }: SavingFormProps) => {
+const SavingsForm = React.memo(({ value, onChange }: SavingsFormProps) => {
   return (
     <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
       <TextField
@@ -45,4 +45,4 @@ const SavingForm = React.memo(({ value, onChange }: SavingFormProps) => {
   );
 });
 
-export default SavingForm;
+export default SavingsForm;

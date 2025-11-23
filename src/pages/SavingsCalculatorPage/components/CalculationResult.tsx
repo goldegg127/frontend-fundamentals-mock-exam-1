@@ -2,10 +2,10 @@ import React from 'react';
 import { colors, ListRow } from 'tosslib';
 
 import { formatAmount } from 'utils';
-import type { CalculationResult } from '../types';
+import type { CalculationResult as CalculationResultData } from '../types';
 
 interface CalculationResultProps {
-  result: CalculationResult | null;
+  result: CalculationResultData | null;
 }
 
 const VALIDATION_MESSAGE = {
