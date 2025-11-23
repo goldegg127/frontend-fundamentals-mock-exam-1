@@ -1,7 +1,7 @@
 import React from 'react';
 import { ListHeader, Spacing } from 'tosslib';
 import { SavingsProduct } from '../types';
-import { default as ProductRow } from './ProductRow';
+import { default as ProductList } from './ProductList';
 
 type RecommendedProductsProps = {
   products: SavingsProduct[];
@@ -11,23 +11,18 @@ type RecommendedProductsProps = {
 
 const RecommendedProducts = React.memo(
   ({ products: recommendedProducts, selectedProductId, onSelect }: RecommendedProductsProps) => {
-    if (!recommendedProducts || recommendedProducts.length === 0) {
-      return null;
-    }
-
     return (
       <>
         <ListHeader title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>} />
 
         <Spacing size={12} />
-        {recommendedProducts.map(product => (
-          <ProductRow
-            key={`recommended-${product.id}`}
-            product={product}
-            selectedProductId={selectedProductId}
-            onSelect={onSelect}
-          />
-        ))}
+
+        <ProductList
+          products={recommendedProducts}
+          selectedProductId={selectedProductId}
+          onSelect={onSelect}
+          fallback={null}
+        />
       </>
     );
   }
