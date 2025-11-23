@@ -10,8 +10,9 @@ import { default as RecommendedProducts } from './components/RecommendedProducts
 import { default as ProductList } from './components/ProductList';
 
 export default function SavingsCalculatorPage() {
-  const { inputs, products, handleInputChange, selectedProductId, handleProductSelect } = useSavingsCalculator();
   const [activeTab, setActiveTab] = useState<'products' | 'results'>('products');
+  const { inputs, products, handleInputChange, selectedProductId, handleProductSelect, savingResult } =
+    useSavingsCalculator();
 
   return (
     <>
@@ -43,7 +44,7 @@ export default function SavingsCalculatorPage() {
       {activeTab === 'results' && (
         <>
           {/* 계산 결과 */}
-          <CalculationResult />
+          <CalculationResult result={savingResult} />
 
           <Divider borderHeight={16} spacingHeight={8} />
 
