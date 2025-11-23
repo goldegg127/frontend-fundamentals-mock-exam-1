@@ -6,10 +6,10 @@ import {
   useProductSelection,
   useSavingsResult,
   useRecommendedProducts,
-} from './hooks';
+} from '../hooks';
 
 import { PageHeader, Divider, Tabs } from 'components/common';
-import { SavingsForm, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
+import { SavingsForm, FilteredProducts, CalculationResult, RecommendedProducts } from 'features/savings/components';
 
 export default function SavingsCalculatorPage() {
   const { inputs, handleInputChange } = useSavingsFormState();

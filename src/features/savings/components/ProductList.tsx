@@ -1,7 +1,7 @@
 import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 import { formatAmount } from 'utils';
-import type { SavingsProduct } from '../types';
+import type { SavingsProduct } from '../../../features/savings/types';
 
 export interface ProductListProps {
   products: SavingsProduct[];
