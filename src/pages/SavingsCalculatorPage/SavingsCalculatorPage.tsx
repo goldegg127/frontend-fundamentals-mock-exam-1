@@ -1,23 +1,22 @@
 import { Spacing } from 'tosslib';
 
-import { useSavingsCalculator } from './hooks/useSavingsCalculator';
+import {
+  useSavingsFormState,
+  useSavingsProductData,
+  useProductSelection,
+  useSavingsResult,
+  useRecommendedProducts,
+} from './hooks';
 
 import { PageHeader, Divider, Tabs } from 'components/common';
-import { default as SavingForm } from './components/SavingsForm';
-import { default as FilteredProducts } from './components/FilteredProducts';
-import { default as CalculationResult } from './components/CalculationResult';
-import { default as RecommendedProducts } from './components/RecommendedProducts';
+import { SavingForm, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
 
 export default function SavingsCalculatorPage() {
-  const {
-    inputs,
-    products,
-    handleInputChange,
-    selectedProductId,
-    handleProductSelect,
-    savingResult,
-    recommendedProducts,
-  } = useSavingsCalculator();
+  const { inputs, handleInputChange } = useSavingsFormState();
+  const { products } = useSavingsProductData(inputs);
+  const { selectedProductId, selectedProduct, handleProductSelect } = useProductSelection(products);
+  const { savingResult } = useSavingsResult(inputs, selectedProduct);
+  const { recommendedProducts } = useRecommendedProducts(products);
 
   return (
     <>
