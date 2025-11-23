@@ -1,11 +1,4 @@
-export interface SavingsProductAPIResponse {
-  id: string;
-  name: string;
-  annualRate: number;
-  minMonthlyAmount: number;
-  maxMonthlyAmount: number;
-  availableTerms: number;
-}
+import { SavingsProductAPIResponse } from 'types';
 
 export type SavingsProduct = SavingsProductAPIResponse;
 
@@ -25,5 +18,5 @@ export interface CalculationResult {
   expectedTotal: number; // 예상 수익 금액
   difference: number; // 목표 금액과의 차이
   recommendedMonthly: number; // 추천 월 납입 금액
-  calcaulatedValidation: CalcaulatedValidation;
+  calcaulatedValidation: CalcaulatedValidation; // 유효성 검사 여부
 }
