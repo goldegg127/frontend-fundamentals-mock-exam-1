@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListRow } from 'tosslib';
-import { SavingsProduct } from '../../../features/savings/types';
+import { SavingsProduct } from '../types';
 import { default as ProductList } from './ProductList';
 
 type ProductListProps = {

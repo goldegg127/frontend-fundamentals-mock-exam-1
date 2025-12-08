@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { http, isHttpError } from 'tosslib';
 
 import type { CalculatorInput, SavingsProduct } from '../types';
-import { api } from 'apis';
+import { api } from '../apis';
 
 const useSavingsProductData = (inputs: CalculatorInput) => {
   const [products, setProducts] = useState<SavingsProduct[]>([]);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { SelectBottomSheet, Spacing, TextField } from 'tosslib';
-import { formatAmount, parseNumber } from 'utils';
+import { formatAmount, parseNumber } from 'pages/SavingsCalculatorPage/utils';
 import type { CalculatorInput } from '../types';
 import { SAVINGS_TERM_OPTIONS } from '../constants';
 

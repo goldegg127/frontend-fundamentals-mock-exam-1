@@ -1,1 +1,1 @@
-export { default as SavingsCalculatorPage } from 'features/savings/pages/SavingsCalculatorPage';
+export { default as SavingsCalculatorPage } from './SavingsCalculatorPage';

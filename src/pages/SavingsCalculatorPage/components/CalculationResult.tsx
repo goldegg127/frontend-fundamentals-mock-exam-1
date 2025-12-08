@@ -1,7 +1,7 @@
 import React from 'react';
 import { colors, ListRow } from 'tosslib';
 
-import { formatAmount } from 'utils';
+import { formatAmount } from 'pages/SavingsCalculatorPage/utils';
 import type { CalculationResult as CalculationResultData } from '../types';
 
 import { VALIDATION_MESSAGE as validationMessage } from '../constants';
