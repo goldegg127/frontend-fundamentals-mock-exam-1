@@ -9,13 +9,13 @@ const useSavingsFormState = () => {
     term: 12,
   });
 
-  const handleInputChange = useCallback((name: keyof CalculatorInput, value: number) => {
-    setInputs(prev => ({ ...prev, [name]: value }));
+  const setSavingsStates = useCallback((updates: Partial<CalculatorInput>) => {
+    setInputs(prev => ({ ...prev, ...updates }));
   }, []);
 
   return {
-    inputs,
-    handleInputChange,
+    savingsStates: inputs,
+    setSavingsStates,
   };
 };
 

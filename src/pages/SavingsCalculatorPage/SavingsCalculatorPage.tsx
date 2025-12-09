@@ -1,3 +1,4 @@
+import React from 'react';
 import { Spacing } from 'tosslib';
 
 import {
@@ -8,55 +9,87 @@ import {
   useRecommendedProducts,
 } from './hooks';
 
-import { PageHeader, Divider, Tabs } from 'pages/SavingsCalculatorPage/components/common';
-import { SavingsForm, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
+import { PageHeader, Divider, Tabs } from './components/common';
+import { AmountInput, TermSelect, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
 
 export default function SavingsCalculatorPage() {
-  const { inputs, handleInputChange } = useSavingsFormState();
-  const { products } = useSavingsProductData(inputs);
+  const { savingsStates, setSavingsStates } = useSavingsFormState();
+  const { products } = useSavingsProductData(savingsStates);
   const { selectedProductId, selectedProduct, handleProductSelect } = useProductSelection(products);
-  const { savingsResult } = useSavingsResult(inputs, selectedProduct);
+  const { savingsResult } = useSavingsResult(savingsStates, selectedProduct);
   const { recommendedProducts } = useRecommendedProducts(products);
 
   return (
-    <>
+    <main>
       <PageHeader title="적금 계산기" />
 
-      {/* 계산 입력 */}
       <section>
+        {/* <h2 className="sr-only">적금 계산을 위한 설정</h2> */}
+
         <Spacing size={16} />
-        <SavingsForm value={inputs} onChange={handleInputChange} />
+
+        <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
+          <AmountInput
+            label="목표 금액"
+            placeholder="목표 금액을 입력하세요"
+            value={savingsStates.goalAmount}
+            onChange={(value: number) => setSavingsStates({ goalAmount: value })}
+          />
+          <Spacing size={16} />
+          <AmountInput
+            label="월 납입액"
+            placeholder="희망 월 납입액을 입력하세요"
+            value={savingsStates.monthlyAmount}
+            onChange={(value: number) => setSavingsStates({ monthlyAmount: value })}
+          />
+          <Spacing size={16} />
+          <TermSelect
+            label="저축 기간"
+            value={savingsStates.term}
+            onChange={(value: number) => setSavingsStates({ term: value })}
+          />
+        </form>
+
         <Spacing size={16} />
       </section>
 
       <Divider borderHeight={16} spacingHeight={8} />
 
-      {/* 입력 결과 */}
-      <section>
-        <Tabs defaultValue="products">
-          <Tabs.Panel label="적금 상품" value="products">
+      <Tabs defaultValue="products">
+        <Tabs.Panel label="적금 상품" value="products">
+          <section>
+            {/* <h2 className="sr-only">적금 상품 목록</h2> */}
+
             <FilteredProducts
               products={products}
               selectedProductId={selectedProductId}
               onSelect={handleProductSelect}
             />
-          </Tabs.Panel>
+          </section>
+        </Tabs.Panel>
 
-          <Tabs.Panel label="계산 결과" value="results">
+        <Tabs.Panel label="계산 결과" value="results">
+          <section>
+            {/* <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2> */}
+
             <CalculationResult result={savingsResult} />
+          </section>
 
-            <Divider borderHeight={16} spacingHeight={8} />
+          <Divider borderHeight={16} spacingHeight={8} />
+
+          <section>
+            {/* <h2 className="sr-only">이자율 높은 순, 추천 상품 목록</h2> */}
 
             <RecommendedProducts
               products={recommendedProducts}
               selectedProductId={selectedProductId}
               onSelect={handleProductSelect}
             />
-          </Tabs.Panel>
-        </Tabs>
-      </section>
+          </section>
+        </Tabs.Panel>
+      </Tabs>
 
       <Spacing size={40} />
-    </>
+    </main>
   );
 }
