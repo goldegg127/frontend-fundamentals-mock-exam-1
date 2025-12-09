@@ -4,7 +4,7 @@ import type { SavingsProduct } from '../types';
 const useProductSelection = (products: SavingsProduct[]) => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
-  const handleProductSelect = useCallback((id: string) => {
+  const onSelect = useCallback((id: string) => {
     setSelectedProductId(id);
   }, []);
 
@@ -15,7 +15,7 @@ const useProductSelection = (products: SavingsProduct[]) => {
   return {
     selectedProductId,
     selectedProduct,
-    handleProductSelect,
+    onSelect,
   };
 };
 

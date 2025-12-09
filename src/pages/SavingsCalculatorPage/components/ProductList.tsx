@@ -1,6 +1,6 @@
 import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
-import { formatAmount } from 'pages/SavingsCalculatorPage/utils';
+import { formatAmount } from '../utils';
 import type { SavingsProduct } from '../types';
 
 export interface ProductListProps {

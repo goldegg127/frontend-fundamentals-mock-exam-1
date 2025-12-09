@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spacing } from 'tosslib';
+import { Spacing, ListRow, ListHeader } from 'tosslib';
 
 import {
   useSavingsFormState,
@@ -10,12 +10,12 @@ import {
 } from './hooks';
 
 import { PageHeader, Divider, Tabs } from './components/common';
-import { AmountInput, TermSelect, FilteredProducts, CalculationResult, RecommendedProducts } from './components';
+import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
 export default function SavingsCalculatorPage() {
   const { savingsStates, setSavingsStates } = useSavingsFormState();
   const { products } = useSavingsProductData(savingsStates);
-  const { selectedProductId, selectedProduct, handleProductSelect } = useProductSelection(products);
+  const { selectedProductId, selectedProduct, onSelect } = useProductSelection(products);
   const { savingsResult } = useSavingsResult(savingsStates, selectedProduct);
   const { recommendedProducts } = useRecommendedProducts(products);
 
@@ -60,10 +60,11 @@ export default function SavingsCalculatorPage() {
           <section>
             {/* <h2 className="sr-only">적금 상품 목록</h2> */}
 
-            <FilteredProducts
+            <ProductList
               products={products}
               selectedProductId={selectedProductId}
-              onSelect={handleProductSelect}
+              onSelect={onSelect}
+              fallback={<ListRow contents={'조건에 맞는 상품이 없습니다.'} />}
             />
           </section>
         </Tabs.Panel>
@@ -80,10 +81,15 @@ export default function SavingsCalculatorPage() {
           <section>
             {/* <h2 className="sr-only">이자율 높은 순, 추천 상품 목록</h2> */}
 
-            <RecommendedProducts
+            <ListHeader
+              title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>}
+            />
+            <Spacing size={12} />
+            <ProductList
               products={recommendedProducts}
               selectedProductId={selectedProductId}
-              onSelect={handleProductSelect}
+              onSelect={onSelect}
+              fallback={null}
             />
           </section>
         </Tabs.Panel>
