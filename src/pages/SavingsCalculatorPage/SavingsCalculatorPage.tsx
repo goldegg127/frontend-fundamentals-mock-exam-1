@@ -4,7 +4,7 @@ import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
 import { filterByMonthlyAmount, filterByTerm } from './utils';
 import { useSavingsFormState, useProductSelection } from './hooks';
 
-import { Divider, Tabs } from './components/common';
+import { Divider, Tabs } from './components/ui';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
 export default function SavingsCalculatorPage() {

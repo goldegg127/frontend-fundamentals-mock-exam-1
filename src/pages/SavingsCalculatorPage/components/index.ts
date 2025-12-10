@@ -1,4 +1,3 @@
-export * from './common';
 export { default as CalculationResult } from './CalculationResult';
 export { default as AmountInput } from './AmountInput';
 export { default as TermSelect } from './TermSelect';
