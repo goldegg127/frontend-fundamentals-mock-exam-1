@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
 import { http, isHttpError } from 'tosslib';
 
-import type { SavingsProduct, CalculatorInput } from '../types';
+import type { SavingsProduct } from '../types';
 import { api } from '../apis';
+import { sortByAnnualRateDesc } from '../utils';
 
 export interface ProductParams {
-  filters?: CalculatorInput | null;
-  order?: 'annualRateAsce';
+  filters?: Array<(product: SavingsProduct) => boolean>;
+  order?: 'annualRateDesc';
   limit?: number;
 }
 
-const useSavingsProductData = ({ filters, order, limit }: ProductParams = {}) => {
+const useSavingsProductData = ({ filters = [], order, limit = 0 }: ProductParams = {}) => {
   const [products, setProducts] = useState<SavingsProduct[]>([]);
 
   useEffect(() => {
@@ -28,30 +29,15 @@ const useSavingsProductData = ({ filters, order, limit }: ProductParams = {}) =>
     fetchProducts();
   }, []);
 
-  const filterProducts = () => {
-    if (!filters) {
-      return products;
-    }
+  // 필터링: 모든 필터 함수를 통과한 상품만
+  const filteredProducts = products.filter(product => filters.every(filterFn => filterFn(product)));
 
-    if (filters?.monthlyAmount === 0) {
-      return products.filter(product => product.availableTerms === filters?.term);
-    }
+  // 정렬
+  const sortedProducts =
+    order === 'annualRateDesc' ? [...filteredProducts].sort(sortByAnnualRateDesc) : filteredProducts;
 
-    return products.filter(product => {
-      const isAmountValid =
-        filters?.monthlyAmount >= product.minMonthlyAmount && filters?.monthlyAmount <= product.maxMonthlyAmount;
-
-      const isTermValid = product.availableTerms === filters?.term;
-
-      return isAmountValid && isTermValid;
-    });
-  };
-
-  const resultProducts = order
-    ? filterProducts()
-        .sort((a, b) => b.annualRate - a.annualRate)
-        .slice(0, limit)
-    : filterProducts();
+  // Limit 적용
+  const resultProducts = limit > 0 ? sortedProducts.slice(0, limit) : sortedProducts;
 
   return {
     products: resultProducts,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
 
+import { filterByMonthlyAmount, filterByTerm } from './utils';
 import { useSavingsFormState, useProductSelection } from './hooks';
 
 import { Divider, Tabs } from './components/common';
@@ -54,7 +55,10 @@ export default function SavingsCalculatorPage() {
             <h2 className="sr-only">적금 상품 목록</h2>
 
             <ProductList
-              filters={savingsStates}
+              filters={[
+                product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                product => filterByTerm(product, savingsStates.term),
+              ]}
               selectedProductId={selectedProductId}
               onSelect={onSelect}
               fallback={<ListRow contents={'조건에 맞는 상품이 없습니다.'} />}
@@ -83,8 +87,11 @@ export default function SavingsCalculatorPage() {
             />
             <Spacing size={12} />
             <ProductList
-              filters={savingsStates}
-              order={'annualRateAsce'}
+              filters={[
+                product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                product => filterByTerm(product, savingsStates.term),
+              ]}
+              order={'annualRateDesc'}
               limit={2}
               selectedProductId={selectedProductId}
               onSelect={onSelect}
