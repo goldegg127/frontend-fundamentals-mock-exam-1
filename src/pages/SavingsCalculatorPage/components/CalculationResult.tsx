@@ -1,73 +1,74 @@
-import React from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { colors, ListRow } from 'tosslib';
+import { useFetchSavingsProducts } from '../hooks';
 import { formatAmount } from '../utils';
-import type { CalculatorInput } from '../types';
-import { useSavingsResult } from '../hooks';
+import type { CalculatorInput, SavingsProduct } from '../types';
 
-interface CalculationResultProps {
+// Context 정의 (데이터 공유용)
+interface CalculationContextType {
+  product: SavingsProduct | null;
   savingsStates: CalculatorInput;
-  selectedProductId: string | null;
 }
 
-const CalculationResult = React.memo(({ savingsStates, selectedProductId }: CalculationResultProps) => {
-  const { savingsResult } = useSavingsResult(savingsStates, selectedProductId);
+const CalculationContext = createContext<CalculationContextType | null>(null);
 
-  if (!savingsResult) {
-    return <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />;
+interface CalculationResultProps {
+  selectedProductId: string | null;
+  savingsStates: CalculatorInput;
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+}
+
+// 부모가 데이터 fetching 담당
+
+const CalculationResult = ({ selectedProductId, savingsStates, children, fallback }: CalculationResultProps) => {
+  const { products } = useFetchSavingsProducts();
+
+  const selectedProduct = useMemo(() => {
+    return products.find(product => product.id === selectedProductId) || null;
+  }, [products, selectedProductId]);
+
+  if (!selectedProductId) {
+    return <>{fallback}</>;
   }
 
-  const { expectedTotal, difference, recommendedMonthly, calculatedValidation } = savingsResult;
+  return (
+    <CalculationContext.Provider value={{ product: selectedProduct, savingsStates }}>
+      <ul>{children}</ul>
+    </CalculationContext.Provider>
+  );
+};
+
+// 자식이 렌더링 담당
+
+interface ItemProps {
+  label: string;
+  calculate: (product: SavingsProduct | null, state: CalculatorInput) => number | null;
+  fallback: string;
+}
+
+CalculationResult.Item = function Item({ label, calculate, fallback }: ItemProps) {
+  const context = useContext(CalculationContext);
+  if (!context) {
+    throw new Error('CalculationResult.Item must be used within CalculationResult');
+  }
+
+  const { product, savingsStates } = context;
+  const resultValue = calculate(product, savingsStates);
 
   return (
-    <ul>
-      <ListRow
-        contents={
-          <ListRow.Texts
-            type="2RowTypeA"
-            top="예상 수익 금액"
-            topProps={{ color: colors.grey600 }}
-            bottom={calculatedValidation.expectedTotal ? formatAmount(expectedTotal) : '월 납입액을 입력해주세요.'}
-            bottomProps={{
-              fontWeight: 'bold',
-              color: calculatedValidation.expectedTotal ? colors.blue600 : colors.red400,
-            }}
-          />
-        }
-      />
-      <ListRow
-        contents={
-          <ListRow.Texts
-            type="2RowTypeA"
-            top="목표 금액과의 차이"
-            topProps={{ color: colors.grey600 }}
-            bottom={
-              calculatedValidation.difference ? formatAmount(difference) : '목표 금액과 월 납입액을 입력해주세요.'
-            }
-            bottomProps={{
-              fontWeight: 'bold',
-              color: calculatedValidation.difference ? colors.blue600 : colors.red400,
-            }}
-          />
-        }
-      />
-      <ListRow
-        contents={
-          <ListRow.Texts
-            type="2RowTypeA"
-            top="추천 월 납입 금액"
-            topProps={{ color: colors.grey600 }}
-            bottom={
-              calculatedValidation.recommendedMonthly ? formatAmount(recommendedMonthly) : '목표 금액을 입력해주세요.'
-            }
-            bottomProps={{
-              fontWeight: 'bold',
-              color: calculatedValidation.recommendedMonthly ? colors.blue600 : colors.red400,
-            }}
-          />
-        }
-      />
-    </ul>
+    <ListRow
+      contents={
+        <ListRow.Texts
+          type="2RowTypeA"
+          top={label}
+          topProps={{ color: colors.grey600 }}
+          bottom={resultValue ? `${formatAmount(resultValue)}원` : fallback}
+          bottomProps={{ fontWeight: 'bold', color: resultValue ? colors.blue600 : colors.red400 }}
+        />
+      }
+    />
   );
-});
+};
 
 export default CalculationResult;

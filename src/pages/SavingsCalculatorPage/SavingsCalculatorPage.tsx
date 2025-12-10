@@ -1,7 +1,14 @@
 import React from 'react';
 import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
 
-import { filterByMonthlyAmount, filterByTerm } from './domain';
+import {
+  filterByMonthlyAmount,
+  filterByTerm,
+  calculateExpectedTotal,
+  calculateDifference,
+  calculateRecommended,
+} from './domain';
+
 import { useSavingsFormState, useProductSelection } from './hooks';
 
 import { Divider, Tabs } from './components/ui';
@@ -70,7 +77,27 @@ export default function SavingsCalculatorPage() {
           <section>
             <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2>
 
-            <CalculationResult savingsStates={savingsStates} selectedProductId={selectedProductId} />
+            <CalculationResult
+              selectedProductId={selectedProductId}
+              savingsStates={savingsStates}
+              fallback={<ListRow contents={'상품을 선택해주세요.'} />}
+            >
+              <CalculationResult.Item
+                label="예상 수익 금액"
+                calculate={calculateExpectedTotal}
+                fallback="월 납입액을 입력해주세요."
+              />
+              <CalculationResult.Item
+                label="목표 금액과의 차이"
+                calculate={calculateDifference}
+                fallback="목표 금액과 월 납입액을 입력해주세요."
+              />
+              <CalculationResult.Item
+                label="추천 월 납입 금액"
+                calculate={calculateRecommended}
+                fallback="목표 금액을 입력해주세요."
+              />
+            </CalculationResult>
           </section>
 
           <Divider borderHeight={16} spacingHeight={8} />
