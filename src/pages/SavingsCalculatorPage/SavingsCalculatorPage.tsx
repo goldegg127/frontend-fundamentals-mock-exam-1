@@ -1,9 +1,9 @@
 import React from 'react';
-import { Spacing, ListRow, ListHeader } from 'tosslib';
+import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
 
 import { useSavingsFormState, useProductSelection } from './hooks';
 
-import { PageHeader, Divider, Tabs } from './components/common';
+import { Divider, Tabs } from './components/common';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
 export default function SavingsCalculatorPage() {
@@ -12,11 +12,13 @@ export default function SavingsCalculatorPage() {
 
   return (
     <main>
-      <PageHeader title="적금 계산기" />
+      <header>
+        <h1 className="sr-only">적금 계산기</h1>
+        <NavigationBar title="적금 계산기" aria-hidden="true" />
+      </header>
 
       <section>
-        {/* <h2 className="sr-only">적금 계산을 위한 설정</h2> */}
-
+        <h2 className="sr-only">적금 계산을 위해 목표 금액, 월 납입액, 저축 기간 입력하기</h2>
         <Spacing size={16} />
 
         <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => e.preventDefault()}>
@@ -49,7 +51,7 @@ export default function SavingsCalculatorPage() {
       <Tabs defaultValue="products">
         <Tabs.Panel label="적금 상품" value="products">
           <section>
-            {/* <h2 className="sr-only">적금 상품 목록</h2> */}
+            <h2 className="sr-only">적금 상품 목록</h2>
 
             <ProductList
               filters={savingsStates}
@@ -62,7 +64,7 @@ export default function SavingsCalculatorPage() {
 
         <Tabs.Panel label="계산 결과" value="results">
           <section>
-            {/* <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2> */}
+            <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2>
 
             <CalculationResult savingsStates={savingsStates} selectedProductId={selectedProductId} />
           </section>
@@ -70,10 +72,14 @@ export default function SavingsCalculatorPage() {
           <Divider borderHeight={16} spacingHeight={8} />
 
           <section>
-            {/* <h2 className="sr-only">이자율 높은 순, 추천 상품 목록</h2> */}
+            <h2 className="sr-only">이자율 높은 순의 추천 상품 목록</h2>
 
             <ListHeader
-              title={<ListHeader.TitleParagraph fontWeight="bold">추천 상품 목록</ListHeader.TitleParagraph>}
+              title={
+                <ListHeader.TitleParagraph fontWeight="bold" aria-hidden="true">
+                  추천 상품 목록
+                </ListHeader.TitleParagraph>
+              }
             />
             <Spacing size={12} />
             <ProductList
