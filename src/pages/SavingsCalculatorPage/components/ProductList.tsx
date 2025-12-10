@@ -1,16 +1,21 @@
 import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 import { formatAmount } from '../utils';
-import type { SavingsProduct } from '../types';
+import { useSavingsProductData, type ProductParams } from '../hooks';
 
-export interface ProductListProps {
-  products: SavingsProduct[];
+export interface ProductListProps extends ProductParams {
   selectedProductId: string | null;
   onSelect: (id: string) => void;
   fallback?: React.ReactNode;
 }
 
-const ProductList = React.memo(({ products, selectedProductId, onSelect, fallback }: ProductListProps) => {
+const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, fallback }: ProductListProps) => {
+  const { products } = useSavingsProductData({
+    filters,
+    order,
+    limit,
+  });
+
   if (!products || products.length === 0) {
     return fallback ? <>{fallback}</> : null;
   }
@@ -37,6 +42,6 @@ const ProductList = React.memo(({ products, selectedProductId, onSelect, fallbac
       ))}
     </ul>
   );
-});
+};
 
 export default ProductList;

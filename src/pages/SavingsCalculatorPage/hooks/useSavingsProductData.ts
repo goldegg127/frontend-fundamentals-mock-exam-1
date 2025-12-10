@@ -1,10 +1,16 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { http, isHttpError } from 'tosslib';
 
-import type { CalculatorInput, SavingsProduct } from '../types';
+import type { SavingsProduct, CalculatorInput } from '../types';
 import { api } from '../apis';
 
-const useSavingsProductData = (inputs: CalculatorInput) => {
+export interface ProductParams {
+  filters?: CalculatorInput | null;
+  order?: 'annualRateAsce';
+  limit?: number;
+}
+
+const useSavingsProductData = ({ filters, order, limit }: ProductParams = {}) => {
   const [products, setProducts] = useState<SavingsProduct[]>([]);
 
   useEffect(() => {
@@ -22,23 +28,33 @@ const useSavingsProductData = (inputs: CalculatorInput) => {
     fetchProducts();
   }, []);
 
-  const filteredProducts = useMemo(() => {
-    if (inputs.monthlyAmount === 0) {
-      return products.filter(product => product.availableTerms === inputs.term);
+  const filterProducts = () => {
+    if (!filters) {
+      return products;
+    }
+
+    if (filters?.monthlyAmount === 0) {
+      return products.filter(product => product.availableTerms === filters?.term);
     }
 
     return products.filter(product => {
       const isAmountValid =
-        inputs.monthlyAmount >= product.minMonthlyAmount && inputs.monthlyAmount <= product.maxMonthlyAmount;
+        filters?.monthlyAmount >= product.minMonthlyAmount && filters?.monthlyAmount <= product.maxMonthlyAmount;
 
-      const isTermValid = product.availableTerms === inputs.term;
+      const isTermValid = product.availableTerms === filters?.term;
 
       return isAmountValid && isTermValid;
     });
-  }, [products, inputs.monthlyAmount, inputs.term]);
+  };
+
+  const resultProducts = order
+    ? filterProducts()
+        .sort((a, b) => b.annualRate - a.annualRate)
+        .slice(0, limit)
+    : filterProducts();
 
   return {
-    products: filteredProducts,
+    products: resultProducts,
   };
 };
 

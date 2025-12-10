@@ -1,14 +1,20 @@
 import { useMemo } from 'react';
-import type { CalculatorInput, SavingsProduct, CalculationResult } from '../types';
+import { useSavingsProductData } from '../hooks';
+import type { CalculatorInput, CalculationResult, SavingsProduct } from '../types';
 
-const useSavingsResult = (inputs: CalculatorInput, selectedProduct: SavingsProduct | null) => {
+const useSavingsResult = (inputs: CalculatorInput, selectedProductId: string | null) => {
+  // TODO: 캐싱 데이터 사용하도록 처리
+  const { products } = useSavingsProductData();
+
   const savingsResult = useMemo<CalculationResult | null>(() => {
-    if (!selectedProduct) {
+    if (!selectedProductId) {
       return null;
     }
 
+    const selectedProduct = products.find((product: SavingsProduct) => product.id === selectedProductId) || null;
+
     const { goalAmount, monthlyAmount, term } = inputs;
-    const rate = selectedProduct.annualRate / 100;
+    const rate = selectedProduct ? selectedProduct.annualRate / 100 : 0;
 
     // 예상 수익 금액 = 월 납입액 * 저축 기간 * (1 + 연이자율 * 0.5)
     const expectedTotal = Math.floor(monthlyAmount * term * (1 + rate * 0.5));
@@ -30,7 +36,7 @@ const useSavingsResult = (inputs: CalculatorInput, selectedProduct: SavingsProdu
         recommendedMonthly: goalAmount !== 0,
       },
     };
-  }, [inputs, selectedProduct]);
+  }, [inputs, selectedProductId, products]);
 
   return { savingsResult };
 };

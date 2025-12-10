@@ -1,23 +1,15 @@
 import React from 'react';
 import { Spacing, ListRow, ListHeader } from 'tosslib';
 
-import {
-  useSavingsFormState,
-  useSavingsProductData,
-  useProductSelection,
-  useSavingsResult,
-  useRecommendedProducts,
-} from './hooks';
+import { useSavingsFormState, useProductSelection, useSavingsResult } from './hooks';
 
 import { PageHeader, Divider, Tabs } from './components/common';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
 export default function SavingsCalculatorPage() {
   const { savingsStates, setSavingsStates } = useSavingsFormState();
-  const { products } = useSavingsProductData(savingsStates);
-  const { selectedProductId, selectedProduct, onSelect } = useProductSelection(products);
-  const { savingsResult } = useSavingsResult(savingsStates, selectedProduct);
-  const { recommendedProducts } = useRecommendedProducts(products);
+  const { selectedProductId, onSelect } = useProductSelection();
+  const { savingsResult } = useSavingsResult(savingsStates, selectedProductId);
 
   return (
     <main>
@@ -61,7 +53,7 @@ export default function SavingsCalculatorPage() {
             {/* <h2 className="sr-only">적금 상품 목록</h2> */}
 
             <ProductList
-              products={products}
+              filters={savingsStates}
               selectedProductId={selectedProductId}
               onSelect={onSelect}
               fallback={<ListRow contents={'조건에 맞는 상품이 없습니다.'} />}
@@ -86,10 +78,12 @@ export default function SavingsCalculatorPage() {
             />
             <Spacing size={12} />
             <ProductList
-              products={recommendedProducts}
+              filters={savingsStates}
+              order={'annualRateAsce'}
+              limit={2}
               selectedProductId={selectedProductId}
               onSelect={onSelect}
-              fallback={null}
+              fallback={<ListRow contents={'추천 상품이 없습니다.'} />}
             />
           </section>
         </Tabs.Panel>
