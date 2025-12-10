@@ -21,7 +21,7 @@ const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, f
   }
 
   return (
-    <ul style={{ margin: 0, padding: 0 }}>
+    <ul>
       {products.map(product => (
         <ListRow
           key={product.id}

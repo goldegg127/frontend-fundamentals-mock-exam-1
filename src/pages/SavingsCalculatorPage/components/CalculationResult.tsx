@@ -19,7 +19,7 @@ const CalculationResult = React.memo(({ savingsStates, selectedProductId }: Calc
   const { expectedTotal, difference, recommendedMonthly, calculatedValidation } = savingsResult;
 
   return (
-    <>
+    <ul>
       <ListRow
         contents={
           <ListRow.Texts
@@ -66,7 +66,7 @@ const CalculationResult = React.memo(({ savingsStates, selectedProductId }: Calc
           />
         }
       />
-    </>
+    </ul>
   );
 });
 
