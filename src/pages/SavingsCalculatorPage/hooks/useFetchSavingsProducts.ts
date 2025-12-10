@@ -11,7 +11,7 @@ export interface ProductParams {
   limit?: number;
 }
 
-const useSavingsProductData = ({ filters = [], order, limit = 0 }: ProductParams = {}) => {
+const useFetchSavingsProducts = ({ filters = [], order, limit = 0 }: ProductParams = {}) => {
   const [products, setProducts] = useState<SavingsProduct[]>([]);
 
   useEffect(() => {
@@ -44,4 +44,4 @@ const useSavingsProductData = ({ filters = [], order, limit = 0 }: ProductParams
   };
 };
 
-export { useSavingsProductData };
+export { useFetchSavingsProducts };

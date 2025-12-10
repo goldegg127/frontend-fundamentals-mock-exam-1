@@ -1,7 +1,7 @@
 import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 import { formatAmount } from '../utils';
-import { useSavingsProductData, type ProductParams } from '../hooks';
+import { useFetchSavingsProducts, type ProductParams } from '../hooks';
 
 export interface ProductListProps extends ProductParams {
   selectedProductId: string | null;
@@ -10,7 +10,7 @@ export interface ProductListProps extends ProductParams {
 }
 
 const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, fallback }: ProductListProps) => {
-  const { products } = useSavingsProductData({
+  const { products } = useFetchSavingsProducts({
     filters,
     order,
     limit,

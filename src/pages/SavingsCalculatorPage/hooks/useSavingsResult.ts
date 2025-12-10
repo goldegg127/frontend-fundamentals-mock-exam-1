@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
-import { useSavingsProductData } from '../hooks';
+import { useFetchSavingsProducts } from '../hooks';
 import type { CalculatorInput, CalculationResult, SavingsProduct } from '../types';
 
 const useSavingsResult = (inputs: CalculatorInput, selectedProductId: string | null) => {
   // TODO: 캐싱 데이터 사용하도록 처리
-  const { products } = useSavingsProductData();
+  const { products } = useFetchSavingsProducts();
 
   const savingsResult = useMemo<CalculationResult | null>(() => {
     if (!selectedProductId) {
