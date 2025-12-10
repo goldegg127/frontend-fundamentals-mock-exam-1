@@ -1,62 +1,71 @@
 import React from 'react';
 import { colors, ListRow } from 'tosslib';
-
-import { formatAmount } from 'pages/SavingsCalculatorPage/utils';
-import type { CalculationResult as CalculationResultData } from '../types';
-
-import { VALIDATION_MESSAGE as validationMessage } from '../constants';
+import { formatAmount } from '../utils';
+import type { CalculatorInput } from '../types';
+import { useSavingsResult } from '../hooks';
 
 interface CalculationResultProps {
-  result: CalculationResultData | null;
+  savingsStates: CalculatorInput;
+  selectedProductId: string | null;
 }
 
-const CalculationResult = React.memo(({ result }: CalculationResultProps) => {
-  const VALIDATION_MESSAGE = validationMessage.CALCULATION_RESULT;
+const CalculationResult = React.memo(({ savingsStates, selectedProductId }: CalculationResultProps) => {
+  const { savingsResult } = useSavingsResult(savingsStates, selectedProductId);
 
-  if (!result) {
-    return <ListRow contents={<ListRow.Texts type="1RowTypeA" top={VALIDATION_MESSAGE.selectedProduct} />} />;
+  if (!savingsResult) {
+    return <ListRow contents={<ListRow.Texts type="1RowTypeA" top="상품을 선택해주세요." />} />;
   }
 
-  const { expectedTotal, difference, recommendedMonthly, calculatedValidation } = result;
-
-  const datas = [
-    {
-      name: 'expectedTotal',
-      label: '예상 수익 금액',
-      value: formatAmount(expectedTotal),
-      validationMessage: VALIDATION_MESSAGE.expectedTotal,
-    },
-    {
-      name: 'difference',
-      label: '목표 금액과의 차이',
-      value: formatAmount(difference) ?? '0',
-      validationMessage: VALIDATION_MESSAGE.difference,
-    },
-    {
-      name: 'recommendedMonthly',
-      label: '추천 월 납입 금액',
-      value: formatAmount(recommendedMonthly),
-      validationMessage: VALIDATION_MESSAGE.recommendedMonthly,
-    },
-  ] as const;
+  const { expectedTotal, difference, recommendedMonthly, calculatedValidation } = savingsResult;
 
   return (
     <>
-      {datas.map(({ name, label, value, validationMessage }, index) => (
-        <ListRow
-          key={`${index}-${name}`}
-          contents={
-            <ListRow.Texts
-              type="2RowTypeA"
-              top={label}
-              topProps={{ color: colors.grey600 }}
-              {...(calculatedValidation[name]
-                ? { bottom: value, bottomProps: { fontWeight: 'bold', color: colors.blue600 } }
-                : { bottom: validationMessage, bottomProps: { fontWeight: 'bold', color: colors.red400 } })}
-            />
-          }
-        />
-      ))}
+      <ListRow
+        contents={
+          <ListRow.Texts
+            type="2RowTypeA"
+            top="예상 수익 금액"
+            topProps={{ color: colors.grey600 }}
+            bottom={calculatedValidation.expectedTotal ? formatAmount(expectedTotal) : '월 납입액을 입력해주세요.'}
+            bottomProps={{
+              fontWeight: 'bold',
+              color: calculatedValidation.expectedTotal ? colors.blue600 : colors.red400,
+            }}
+          />
+        }
+      />
+      <ListRow
+        contents={
+          <ListRow.Texts
+            type="2RowTypeA"
+            top="목표 금액과의 차이"
+            topProps={{ color: colors.grey600 }}
+            bottom={
+              calculatedValidation.difference ? formatAmount(difference) : '목표 금액과 월 납입액을 입력해주세요.'
+            }
+            bottomProps={{
+              fontWeight: 'bold',
+              color: calculatedValidation.difference ? colors.blue600 : colors.red400,
+            }}
+          />
+        }
+      />
+      <ListRow
+        contents={
+          <ListRow.Texts
+            type="2RowTypeA"
+            top="추천 월 납입 금액"
+            topProps={{ color: colors.grey600 }}
+            bottom={
+              calculatedValidation.recommendedMonthly ? formatAmount(recommendedMonthly) : '목표 금액을 입력해주세요.'
+            }
+            bottomProps={{
+              fontWeight: 'bold',
+              color: calculatedValidation.recommendedMonthly ? colors.blue600 : colors.red400,
+            }}
+          />
+        }
+      />
     </>
   );
 });

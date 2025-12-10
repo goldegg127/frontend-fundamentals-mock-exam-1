@@ -1,7 +1,7 @@
 import React from 'react';
 import { Spacing, ListRow, ListHeader } from 'tosslib';
 
-import { useSavingsFormState, useProductSelection, useSavingsResult } from './hooks';
+import { useSavingsFormState, useProductSelection } from './hooks';
 
 import { PageHeader, Divider, Tabs } from './components/common';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
@@ -9,7 +9,6 @@ import { AmountInput, TermSelect, ProductList, CalculationResult } from './compo
 export default function SavingsCalculatorPage() {
   const { savingsStates, setSavingsStates } = useSavingsFormState();
   const { selectedProductId, onSelect } = useProductSelection();
-  const { savingsResult } = useSavingsResult(savingsStates, selectedProductId);
 
   return (
     <main>
@@ -65,7 +64,7 @@ export default function SavingsCalculatorPage() {
           <section>
             {/* <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2> */}
 
-            <CalculationResult result={savingsResult} />
+            <CalculationResult savingsStates={savingsStates} selectedProductId={selectedProductId} />
           </section>
 
           <Divider borderHeight={16} spacingHeight={8} />
