@@ -3,7 +3,7 @@ import { http, isHttpError } from 'tosslib';
 
 import type { SavingsProduct } from '../types';
 import { api } from '../apis';
-import { sortByAnnualRateDesc } from '../utils';
+import { sortByAnnualRateDesc } from '../domain';
 
 export interface ProductParams {
   filters?: Array<(product: SavingsProduct) => boolean>;

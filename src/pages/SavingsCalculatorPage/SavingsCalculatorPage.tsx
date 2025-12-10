@@ -1,7 +1,7 @@
 import React from 'react';
 import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
 
-import { filterByMonthlyAmount, filterByTerm } from './utils';
+import { filterByMonthlyAmount, filterByTerm } from './domain';
 import { useSavingsFormState, useProductSelection } from './hooks';
 
 import { Divider, Tabs } from './components/ui';
