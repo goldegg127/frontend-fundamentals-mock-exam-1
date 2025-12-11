@@ -29,7 +29,7 @@ const CalculationResult = ({ selectedProductId, savingsStates, children, fallbac
   }, [products, selectedProductId]);
 
   if (!selectedProductId) {
-    return <>{fallback}</>;
+    return fallback ? <ListRow contents={fallback} /> : null;
   }
 
   return (
@@ -72,3 +72,7 @@ CalculationResult.Item = function Item({ label, calculate, fallback }: ItemProps
 };
 
 export default CalculationResult;
+
+CalculationResult.Loading = ({ text }: { text: string }) => {
+  return <ListRow contents={text} />;
+};

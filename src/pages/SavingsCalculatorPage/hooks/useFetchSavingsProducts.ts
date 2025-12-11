@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { http, isHttpError } from 'tosslib';
+import { useMemo } from 'react';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { http } from 'tosslib';
 
 import type { SavingsProduct } from '../types';
 import { api } from '../apis';
@@ -11,37 +12,25 @@ export interface ProductParams {
   limit?: number;
 }
 
-const useFetchSavingsProducts = ({ filters = [], order, limit = 0 }: ProductParams = {}) => {
-  const [products, setProducts] = useState<SavingsProduct[]>([]);
+export const useFetchSavingsProducts = ({ filters = [], order, limit = 0 }: ProductParams = {}) => {
+  const { data: products } = useSuspenseQuery({
+    queryKey: ['savings-products', 'list'],
+    queryFn: async (): Promise<SavingsProduct[]> => await http.get<SavingsProduct[]>(api.savingsProducts),
+  });
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await http.get<SavingsProduct[]>(api.savingsProducts);
-        setProducts(data);
-      } catch (error) {
-        if (isHttpError(error)) {
-          console.log(error.message);
-        }
-      }
-    };
+  const processedProducts = useMemo(() => {
+    // 필터링: 모든 필터 함수를 통과한 상품만
+    const filteredProducts = products.filter(product => filters.every(filterFn => filterFn(product)));
 
-    fetchProducts();
-  }, []);
+    // 정렬
+    const sortedProducts =
+      order === 'annualRateDesc' ? [...filteredProducts].sort(sortByAnnualRateDesc) : filteredProducts;
 
-  // 필터링: 모든 필터 함수를 통과한 상품만
-  const filteredProducts = products.filter(product => filters.every(filterFn => filterFn(product)));
-
-  // 정렬
-  const sortedProducts =
-    order === 'annualRateDesc' ? [...filteredProducts].sort(sortByAnnualRateDesc) : filteredProducts;
-
-  // Limit 적용
-  const resultProducts = limit > 0 ? sortedProducts.slice(0, limit) : sortedProducts;
+    // Limit 적용
+    return limit > 0 ? sortedProducts.slice(0, limit) : sortedProducts;
+  }, [products, filters, order, limit]);
 
   return {
-    products: resultProducts,
+    products: processedProducts,
   };
 };
-
-export { useFetchSavingsProducts };

@@ -17,7 +17,7 @@ const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, f
   });
 
   if (!products || products.length === 0) {
-    return fallback ? <>{fallback}</> : null;
+    return fallback ? <ListRow contents={fallback} /> : null;
   }
 
   return (
@@ -45,3 +45,7 @@ const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, f
 };
 
 export default ProductList;
+
+ProductList.Loading = ({ text }: { text: string }) => {
+  return <ListRow contents={text} />;
+};

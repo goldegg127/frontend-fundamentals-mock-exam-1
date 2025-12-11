@@ -1,6 +1,5 @@
-import React from 'react';
-import { Spacing, ListRow, ListHeader, NavigationBar } from 'tosslib';
-
+import React, { Suspense } from 'react';
+import { Spacing, ListHeader, NavigationBar } from 'tosslib';
 import {
   filterByMonthlyAmount,
   filterByTerm,
@@ -8,9 +7,7 @@ import {
   calculateDifference,
   calculateRecommended,
 } from './domain';
-
 import { useSavingsFormState, useProductSelection } from './hooks';
-
 import { Divider, Tabs } from './components/ui';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
@@ -61,15 +58,17 @@ export default function SavingsCalculatorPage() {
           <section>
             <h2 className="sr-only">적금 상품 목록</h2>
 
-            <ProductList
-              filters={[
-                product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
-                product => filterByTerm(product, savingsStates.term),
-              ]}
-              selectedProductId={selectedProductId}
-              onSelect={onSelect}
-              fallback={<ListRow contents={'조건에 맞는 상품이 없습니다.'} />}
-            />
+            <Suspense fallback={<ProductList.Loading text={'상품을 불러오는 중...'} />}>
+              <ProductList
+                filters={[
+                  product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                  product => filterByTerm(product, savingsStates.term),
+                ]}
+                selectedProductId={selectedProductId}
+                onSelect={onSelect}
+                fallback={'조건에 맞는 상품이 없습니다.'}
+              />
+            </Suspense>
           </section>
         </Tabs.Panel>
 
@@ -77,27 +76,29 @@ export default function SavingsCalculatorPage() {
           <section>
             <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2>
 
-            <CalculationResult
-              selectedProductId={selectedProductId}
-              savingsStates={savingsStates}
-              fallback={<ListRow contents={'상품을 선택해주세요.'} />}
-            >
-              <CalculationResult.Item
-                label="예상 수익 금액"
-                calculate={calculateExpectedTotal}
-                fallback="월 납입액을 입력해주세요."
-              />
-              <CalculationResult.Item
-                label="목표 금액과의 차이"
-                calculate={calculateDifference}
-                fallback="목표 금액과 월 납입액을 입력해주세요."
-              />
-              <CalculationResult.Item
-                label="추천 월 납입 금액"
-                calculate={calculateRecommended}
-                fallback="목표 금액을 입력해주세요."
-              />
-            </CalculationResult>
+            <Suspense fallback={<CalculationResult.Loading text={'계산 결과를 불러오는 중...'} />}>
+              <CalculationResult
+                selectedProductId={selectedProductId}
+                savingsStates={savingsStates}
+                fallback={'상품을 선택해주세요.'}
+              >
+                <CalculationResult.Item
+                  label="예상 수익 금액"
+                  calculate={calculateExpectedTotal}
+                  fallback={'월 납입액을 입력해주세요.'}
+                />
+                <CalculationResult.Item
+                  label="목표 금액과의 차이"
+                  calculate={calculateDifference}
+                  fallback={'목표 금액과 월 납입액을 입력해주세요.'}
+                />
+                <CalculationResult.Item
+                  label="추천 월 납입 금액"
+                  calculate={calculateRecommended}
+                  fallback={'목표 금액을 입력해주세요.'}
+                />
+              </CalculationResult>
+            </Suspense>
           </section>
 
           <Divider borderHeight={16} spacingHeight={8} />
@@ -113,17 +114,19 @@ export default function SavingsCalculatorPage() {
               }
             />
             <Spacing size={12} />
-            <ProductList
-              filters={[
-                product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
-                product => filterByTerm(product, savingsStates.term),
-              ]}
-              order={'annualRateDesc'}
-              limit={2}
-              selectedProductId={selectedProductId}
-              onSelect={onSelect}
-              fallback={<ListRow contents={'추천 상품이 없습니다.'} />}
-            />
+            <Suspense fallback={<ProductList.Loading text={'추천 상품을 불러오는 중...'} />}>
+              <ProductList
+                filters={[
+                  product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                  product => filterByTerm(product, savingsStates.term),
+                ]}
+                order={'annualRateDesc'}
+                limit={2}
+                selectedProductId={selectedProductId}
+                onSelect={onSelect}
+                fallback={'추천 상품이 없습니다.'}
+              />
+            </Suspense>
           </section>
         </Tabs.Panel>
       </Tabs>
