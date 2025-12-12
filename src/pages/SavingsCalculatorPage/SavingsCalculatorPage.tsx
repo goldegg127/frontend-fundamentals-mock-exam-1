@@ -1,4 +1,6 @@
 import React, { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import { Spacing, ListHeader, NavigationBar } from 'tosslib';
 import {
   filterByMonthlyAmount,
@@ -14,6 +16,7 @@ import { AmountInput, TermSelect, ProductList, CalculationResult } from './compo
 export default function SavingsCalculatorPage() {
   const { savingsStates, setSavingsStates } = useSavingsFormState();
   const { selectedProductId, onSelect } = useProductSelection();
+  const { reset } = useQueryErrorResetBoundary();
 
   return (
     <main>
@@ -58,17 +61,24 @@ export default function SavingsCalculatorPage() {
           <section>
             <h2 className="sr-only">적금 상품 목록</h2>
 
-            <Suspense fallback={<ProductList.Loading text={'상품을 불러오는 중...'} />}>
-              <ProductList
-                filters={[
-                  product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
-                  product => filterByTerm(product, savingsStates.term),
-                ]}
-                selectedProductId={selectedProductId}
-                onSelect={onSelect}
-                fallback={'조건에 맞는 상품이 없습니다.'}
-              />
-            </Suspense>
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary }) => (
+                <ProductList.Error message="추천 상품을 불러오는 데 실패했습니다." onRetry={resetErrorBoundary} />
+              )}
+            >
+              <Suspense fallback={<ProductList.Loading text={'상품을 불러오는 중...'} />}>
+                <ProductList
+                  filters={[
+                    product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                    product => filterByTerm(product, savingsStates.term),
+                  ]}
+                  selectedProductId={selectedProductId}
+                  onSelect={onSelect}
+                  fallback={'조건에 맞는 상품이 없습니다.'}
+                />
+              </Suspense>
+            </ErrorBoundary>
           </section>
         </Tabs.Panel>
 
@@ -76,29 +86,36 @@ export default function SavingsCalculatorPage() {
           <section>
             <h2 className="sr-only">선택한 적금 상품의 계산 결과</h2>
 
-            <Suspense fallback={<CalculationResult.Loading text={'계산 결과를 불러오는 중...'} />}>
-              <CalculationResult
-                selectedProductId={selectedProductId}
-                savingsStates={savingsStates}
-                fallback={'상품을 선택해주세요.'}
-              >
-                <CalculationResult.Item
-                  label="예상 수익 금액"
-                  calculate={calculateExpectedTotal}
-                  fallback={'월 납입액을 입력해주세요.'}
-                />
-                <CalculationResult.Item
-                  label="목표 금액과의 차이"
-                  calculate={calculateDifference}
-                  fallback={'목표 금액과 월 납입액을 입력해주세요.'}
-                />
-                <CalculationResult.Item
-                  label="추천 월 납입 금액"
-                  calculate={calculateRecommended}
-                  fallback={'목표 금액을 입력해주세요.'}
-                />
-              </CalculationResult>
-            </Suspense>
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary }) => (
+                <CalculationResult.Error message="계산 결과를 불러오는 데 실패했습니다." onRetry={resetErrorBoundary} />
+              )}
+            >
+              <Suspense fallback={<CalculationResult.Loading text={'계산 결과를 불러오는 중...'} />}>
+                <CalculationResult
+                  selectedProductId={selectedProductId}
+                  savingsStates={savingsStates}
+                  fallback={'상품을 선택해주세요.'}
+                >
+                  <CalculationResult.Item
+                    label="예상 수익 금액"
+                    calculate={calculateExpectedTotal}
+                    fallback={'월 납입액을 입력해주세요.'}
+                  />
+                  <CalculationResult.Item
+                    label="목표 금액과의 차이"
+                    calculate={calculateDifference}
+                    fallback={'목표 금액과 월 납입액을 입력해주세요.'}
+                  />
+                  <CalculationResult.Item
+                    label="추천 월 납입 금액"
+                    calculate={calculateRecommended}
+                    fallback={'목표 금액을 입력해주세요.'}
+                  />
+                </CalculationResult>
+              </Suspense>
+            </ErrorBoundary>
           </section>
 
           <Divider borderHeight={16} spacingHeight={8} />
@@ -114,19 +131,26 @@ export default function SavingsCalculatorPage() {
               }
             />
             <Spacing size={12} />
-            <Suspense fallback={<ProductList.Loading text={'추천 상품을 불러오는 중...'} />}>
-              <ProductList
-                filters={[
-                  product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
-                  product => filterByTerm(product, savingsStates.term),
-                ]}
-                order={'annualRateDesc'}
-                limit={2}
-                selectedProductId={selectedProductId}
-                onSelect={onSelect}
-                fallback={'추천 상품이 없습니다.'}
-              />
-            </Suspense>
+            <ErrorBoundary
+              onReset={reset}
+              fallbackRender={({ resetErrorBoundary }) => (
+                <ProductList.Error message="추천 상품을 불러오는 데 실패했습니다." onRetry={resetErrorBoundary} />
+              )}
+            >
+              <Suspense fallback={<ProductList.Loading text={'추천 상품을 불러오는 중...'} />}>
+                <ProductList
+                  filters={[
+                    product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
+                    product => filterByTerm(product, savingsStates.term),
+                  ]}
+                  order={'annualRateDesc'}
+                  limit={2}
+                  selectedProductId={selectedProductId}
+                  onSelect={onSelect}
+                  fallback={'추천 상품이 없습니다.'}
+                />
+              </Suspense>
+            </ErrorBoundary>
           </section>
         </Tabs.Panel>
       </Tabs>

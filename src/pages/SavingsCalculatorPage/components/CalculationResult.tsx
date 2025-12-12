@@ -3,6 +3,7 @@ import { colors, ListRow } from 'tosslib';
 import { useFetchSavingsProducts } from '../hooks';
 import { formatAmount } from '../utils';
 import type { CalculatorInput, SavingsProduct } from '../types';
+import { ErrorFallback, type ErrorFallbackProps } from '../components';
 
 // Context 정의 (데이터 공유용)
 interface CalculationContextType {
@@ -75,4 +76,8 @@ export default CalculationResult;
 
 CalculationResult.Loading = ({ text }: { text: string }) => {
   return <ListRow contents={text} />;
+};
+
+CalculationResult.Error = ({ message, onRetry }: ErrorFallbackProps) => {
+  return <ListRow contents={<ErrorFallback message={message} onRetry={onRetry} />} />;
 };

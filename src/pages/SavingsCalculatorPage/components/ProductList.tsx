@@ -2,6 +2,7 @@ import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 import { formatAmount } from '../utils';
 import { useFetchSavingsProducts, type ProductParams } from '../hooks';
+import { ErrorFallback, type ErrorFallbackProps } from '../components';
 
 export interface ProductListProps extends ProductParams {
   selectedProductId: string | null;
@@ -48,4 +49,8 @@ export default ProductList;
 
 ProductList.Loading = ({ text }: { text: string }) => {
   return <ListRow contents={text} />;
+};
+
+ProductList.Error = ({ message, onRetry }: ErrorFallbackProps) => {
+  return <ListRow contents={<ErrorFallback message={message} onRetry={onRetry} />} />;
 };
