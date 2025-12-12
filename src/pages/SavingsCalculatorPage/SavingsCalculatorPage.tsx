@@ -5,6 +5,7 @@ import { Spacing, ListHeader, NavigationBar } from 'tosslib';
 import {
   filterByMonthlyAmount,
   filterByTerm,
+  sortByAnnualRateDesc,
   calculateExpectedTotal,
   calculateDifference,
   calculateRecommended,
@@ -143,7 +144,7 @@ export default function SavingsCalculatorPage() {
                     product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
                     product => filterByTerm(product, savingsStates.term),
                   ]}
-                  order={'annualRateDesc'}
+                  sortBy={sortByAnnualRateDesc}
                   limit={2}
                   selectedProductId={selectedProductId}
                   onSelect={onSelect}

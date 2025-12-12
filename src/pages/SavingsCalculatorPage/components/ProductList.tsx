@@ -10,10 +10,10 @@ export interface ProductListProps extends ProductParams {
   fallback?: React.ReactNode;
 }
 
-const ProductList = ({ filters, order, limit = 0, selectedProductId, onSelect, fallback }: ProductListProps) => {
+const ProductList = ({ filters, sortBy, limit = 0, selectedProductId, onSelect, fallback }: ProductListProps) => {
   const { products } = useFetchSavingsProducts({
     filters,
-    order,
+    sortBy,
     limit,
   });
 
