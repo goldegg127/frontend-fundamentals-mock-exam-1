@@ -1,21 +1,21 @@
 import React from 'react';
 import { Assets, colors, ListRow } from 'tosslib';
 import { formatAmount } from '../utils';
-import { useFetchSavingsProducts, type ProductParams } from '../hooks';
+import { useProductSelection, useFetchSavingsProducts, type ProductParams } from '../hooks';
 import { ErrorFallback, type ErrorFallbackProps } from '../components';
 
 export interface ProductListProps extends ProductParams {
-  selectedProductId: string | null;
-  onSelect: (id: string) => void;
   fallback?: React.ReactNode;
 }
 
-const ProductList = ({ filters, sortBy, limit = 0, selectedProductId, onSelect, fallback }: ProductListProps) => {
+const ProductList = ({ filters, sortBy, limit = 0, fallback }: ProductListProps) => {
   const { products } = useFetchSavingsProducts({
     filters,
     sortBy,
     limit,
   });
+
+  const { selectedProductId, onSelect } = useProductSelection();
 
   if (!products || products.length === 0) {
     return fallback ? <ListRow contents={fallback} /> : null;
@@ -26,6 +26,7 @@ const ProductList = ({ filters, sortBy, limit = 0, selectedProductId, onSelect, 
       {products.map(product => (
         <ListRow
           key={product.id}
+          aria-selected={product.id === selectedProductId}
           contents={
             <ListRow.Texts
               type="3RowTypeA"

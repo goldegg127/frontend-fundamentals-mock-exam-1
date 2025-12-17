@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { colors, ListRow } from 'tosslib';
-import { useFetchSavingsProducts } from '../hooks';
+import { useFetchSavingsProducts, useProductSelection } from '../hooks';
 import { formatAmount } from '../utils';
 import type { CalculatorInput, SavingsProduct } from '../types';
 import { ErrorFallback, type ErrorFallbackProps } from '../components';
@@ -14,7 +14,6 @@ interface CalculationContextType {
 const CalculationContext = createContext<CalculationContextType | null>(null);
 
 interface CalculationResultProps {
-  selectedProductId: string | null;
   savingsStates: CalculatorInput;
   fallback?: React.ReactNode;
   children: React.ReactNode;
@@ -22,8 +21,9 @@ interface CalculationResultProps {
 
 // 부모가 데이터 fetching 담당
 
-const CalculationResult = ({ selectedProductId, savingsStates, children, fallback }: CalculationResultProps) => {
+const CalculationResult = ({ savingsStates, children, fallback }: CalculationResultProps) => {
   const { products } = useFetchSavingsProducts();
+  const { selectedProductId } = useProductSelection();
 
   const selectedProduct = useMemo(() => {
     return products.find(product => product.id === selectedProductId) || null;

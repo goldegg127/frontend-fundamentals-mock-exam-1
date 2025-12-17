@@ -10,13 +10,12 @@ import {
   calculateDifference,
   calculateRecommended,
 } from './domain';
-import { useSavingsFormState, useProductSelection } from './hooks';
+import { useSavingsFormState } from './hooks';
 import { Divider, Tabs } from './components/ui';
 import { AmountInput, TermSelect, ProductList, CalculationResult } from './components';
 
 export default function SavingsCalculatorPage() {
   const { savingsStates, setSavingsStates } = useSavingsFormState();
-  const { selectedProductId, onSelect } = useProductSelection();
   const { reset } = useQueryErrorResetBoundary();
 
   return (
@@ -74,8 +73,6 @@ export default function SavingsCalculatorPage() {
                     product => filterByMonthlyAmount(product, savingsStates.monthlyAmount),
                     product => filterByTerm(product, savingsStates.term),
                   ]}
-                  selectedProductId={selectedProductId}
-                  onSelect={onSelect}
                   fallback={'조건에 맞는 상품이 없습니다.'}
                 />
               </Suspense>
@@ -94,11 +91,7 @@ export default function SavingsCalculatorPage() {
               )}
             >
               <Suspense fallback={<CalculationResult.Loading text={'계산 결과를 불러오는 중...'} />}>
-                <CalculationResult
-                  selectedProductId={selectedProductId}
-                  savingsStates={savingsStates}
-                  fallback={'상품을 선택해주세요.'}
-                >
+                <CalculationResult savingsStates={savingsStates} fallback={'상품을 선택해주세요.'}>
                   <CalculationResult.Item
                     label="예상 수익 금액"
                     calculate={calculateExpectedTotal}
@@ -146,8 +139,6 @@ export default function SavingsCalculatorPage() {
                   ]}
                   sortBy={sortByAnnualRateDesc}
                   limit={2}
-                  selectedProductId={selectedProductId}
-                  onSelect={onSelect}
                   fallback={'추천 상품이 없습니다.'}
                 />
               </Suspense>
