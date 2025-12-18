@@ -29,7 +29,7 @@ const CalculationResult = ({ savingsStates, children, fallback }: CalculationRes
     return products.find(product => product.id === selectedProductId) || null;
   }, [products, selectedProductId]);
 
-  if (!selectedProductId) {
+  if (!selectedProductId || !selectedProduct) {
     return fallback ? <ListRow contents={fallback} /> : null;
   }
 
